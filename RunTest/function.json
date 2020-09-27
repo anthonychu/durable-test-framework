@@ -1,0 +1,16 @@
+{
+  "bindings": [
+    {
+      "name": "testData",
+      "type": "activityTrigger",
+      "direction": "in"
+    },
+    {
+      "type": "blob",
+      "direction": "out",
+      "name": "screenshot",
+      "path": "screenshots/{data.runId}.png",
+      "connection": "AzureWebJobsStorage"
+    }
+  ]
+}
