@@ -16,7 +16,8 @@
   },
   "extensions": {
     "durableTask": {
-      "hubName": "TestsHub"
+      "hubName": "TestsHub",
+      "maxConcurrentActivityFunctions": 2
     }
   }
 }
