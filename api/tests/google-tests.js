@@ -18,11 +18,11 @@ describe('Google', () => {
   });
 
   describe('search', (page) => {
-    it('should be able to find something from docs.microsoft.com', async (page) => {
+    it('should be able to find something from microsoft.com', async (page) => {
       await page.goto("https://www.google.com/");
       await page.type('input[name=q]', 'azure functions');
-      await Promise.all([page.click('input[value="Google Search"]'), page.waitForSelector("cite")]);
-      const elements = await page.$x("//cite[contains(text(), 'docs.microsoft.com')]");
+      await Promise.all([page.type('input[name=q]', String.fromCharCode(13)), page.waitForSelector("cite")]);
+      const elements = await page.$x("//cite[contains(text(), 'microsoft.com')]");
 
       assert.isNotEmpty(elements);
     });

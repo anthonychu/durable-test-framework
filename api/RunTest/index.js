@@ -12,6 +12,7 @@ module.exports = async function (context) {
 
     let result = {
         testId,
+        runId,
         screenshotUrl: `${storageBaseUrl}/screenshots/${runId}.png`,
         description: test.description
     };
@@ -23,7 +24,7 @@ module.exports = async function (context) {
         await Promise.resolve(test.fn(page));
         result.passed = true;
         context.log(`${test.description}: passed`);
-        const screenshotBuffer = await page.screenshot({ fullPage: true });
+        const screenshotBuffer = await page.screenshot({ fullPage: false });
         context.bindings.screenshot = screenshotBuffer;
     } catch (ex) {
         result.passed = false;
@@ -32,5 +33,10 @@ module.exports = async function (context) {
     } finally {
         await browser.close();
     }
+    
+    context.bindings.signalRMessage = {
+        target: "testCompleted",
+        arguments: [ result ]
+    };
     return result;
 };

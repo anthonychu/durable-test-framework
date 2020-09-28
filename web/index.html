@@ -1,0 +1,80 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Durable Functions test framework</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <style>
+    img.screenshot {
+      height: 175px;
+      border: 1px solid #999;
+      margin: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div v-for="result in results" :key="result.runId">
+      <hr />
+      <h2>{{ result.passed ? "✅ Passed" : "❌ Failed" }}: {{ result.description }}</h2>
+      <p v-if="result.exception">{{ result.exception }}</p>
+      <img v-if="result.screenshotAvailable" :src="result.screenshotUrl" class="screenshot" @error="onImageError" />
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@3.1.8/dist/browser/signalr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script>
+
+    const app = new Vue({
+      el: '#app',
+      data: function() {
+        return {
+          results: []
+        }
+      },
+      mounted: async function() {
+        const connection = new signalR.HubConnectionBuilder()
+          .withUrl('http://localhost:7071/api')
+          .withAutomaticReconnect()
+          .build()
+
+        connection.on('testCompleted', onTestCompleted.bind(this))
+
+        connection.start();
+
+        function onTestCompleted(testResult) {
+          const results = this.results
+
+          loadImage(5)
+
+          function loadImage(retriesRemaining) {
+            const img = new Image();
+            img.onerror = function () {
+              if (retriesRemaining > 0) {
+                setTimeout(() => loadImage(retriesRemaining - 1), 1000)
+              }
+            }
+            img.onload = function () {
+              testResult.screenshotAvailable = true
+              results.unshift(testResult)
+            }
+            img.src = testResult.screenshotUrl
+            
+            if (retriesRemaining === 0) {
+              results.unshift(testResult)
+            }
+          }
+        }
+      },
+      methods: {
+        onImageError: function() {
+          console.log('hi')
+        }
+      }
+    })
+
+
+  </script>
+</body>
+</html>
