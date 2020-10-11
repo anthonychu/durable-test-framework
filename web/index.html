@@ -1,24 +1,28 @@
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Durable Functions test framework</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-  <style>
-    img.screenshot {
-      height: 175px;
-      border: 1px solid #999;
-      margin: 12px;
-    }
-  </style>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 </head>
+
 <body>
   <div id="app">
-    <div v-for="result in results" :key="result.runId">
-      <hr />
-      <h2>{{ result.passed ? "✅ Passed" : "❌ Failed" }}: {{ result.description }}</h2>
-      <p v-if="result.exception">{{ result.exception }}</p>
-      <img v-if="result.screenshotAvailable" :src="result.screenshotUrl" class="screenshot" @error="onImageError" />
+    <div class="container">
+      <div v-for="result in results" :key="result.runId" class="row">
+        <div class="col-12">
+          <hr />
+        </div>
+        <div class="col-md-8">
+          <h3>{{ result.passed ? "✅ Passed" : "❌ Failed" }}: {{ result.description }}</h3>
+          <p v-if="result.exception">{{ result.exception }}</p>
+        </div>
+        <div class="col-md-4">
+          <img v-if="result.screenshotAvailable" :src="result.screenshotUrl" class="screenshot img-fluid img-thumbnail" @error="onImageError" />
+        </div>
+      </div>
     </div>
   </div>
 
@@ -28,12 +32,12 @@
 
     const app = new Vue({
       el: '#app',
-      data: function() {
+      data: function () {
         return {
           results: []
         }
       },
-      mounted: async function() {
+      mounted: async function () {
         const connection = new signalR.HubConnectionBuilder()
           .withUrl('http://localhost:7071/api')
           .withAutomaticReconnect()
@@ -60,7 +64,7 @@
               results.unshift(testResult)
             }
             img.src = testResult.screenshotUrl
-            
+
             if (retriesRemaining === 0) {
               results.unshift(testResult)
             }
@@ -68,7 +72,7 @@
         }
       },
       methods: {
-        onImageError: function() {
+        onImageError: function () {
           console.log('hi')
         }
       }
@@ -77,4 +81,5 @@
 
   </script>
 </body>
+
 </html>

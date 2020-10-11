@@ -9,7 +9,7 @@ let currentContext = [];
 global.assert = chai.assert;
 global.describe = function (description, fn) {
   currentContext.push(description);
-  console.log(description);
+  // console.log(description);
   fn();
   currentContext.splice(-1, 1);
 };
@@ -20,12 +20,12 @@ global.it = function (description, fn) {
     description: [...currentContext, description].join(' ')
   };
   const testId = `${currentFile}-${test.description}`;
-  console.log(testId);
+  // console.log(testId);
   durableTests[testId] = test;
 }
 
 function discoverTests() {
-  const testsFolder = `${__dirname}/tests`;
+  const testsFolder = `${__dirname}/Tests`;
   const files = fs.readdirSync(testsFolder);
 
   for (let file of files) {
