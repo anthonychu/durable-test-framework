@@ -2,7 +2,8 @@
 const { v4: uuidv4 } = require('uuid');
 
 module.exports = df.orchestrator(function* (context) {
-    const testIds = yield context.df.callActivity('DiscoverTests');
+    const iterations = parseInt(context.df.getInput());
+    const testIds = yield context.df.callActivity('DiscoverTests', iterations);
 
     if (!context.df.isReplaying) {
         context.log(`${testIds.length} tests discovered`);

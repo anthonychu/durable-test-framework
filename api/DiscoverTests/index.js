@@ -3,5 +3,9 @@
 const tests = require('../durable-tests');
 
 module.exports = async function (context) {
-    return Object.keys(tests);
+    const testIds = [];
+    for (let i = 0; i < context.bindings.iterations; i++) {
+        testIds.push(...Object.keys(tests));
+    }
+    return testIds;
 };

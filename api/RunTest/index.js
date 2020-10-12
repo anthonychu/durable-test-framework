@@ -20,9 +20,9 @@ module.exports = async function (context) {
 
     const browser = await browserTask;
     const browserContext = await browser.createIncognitoBrowserContext();
+    const page = await browserContext.newPage();
+    
     try {
-        const page = await browserContext.newPage();
-
         await page.setViewport({
             width: 1280,
             height: 720
@@ -31,13 +31,15 @@ module.exports = async function (context) {
         await Promise.resolve(test.fn(page));
         result.passed = true;
         context.log(`${test.description}: passed`);
-        const screenshotBuffer = await page.screenshot({ fullPage: false });
-        context.bindings.screenshot = screenshotBuffer;
     } catch (ex) {
         result.passed = false;
         result.exception = ex.toString();
         context.log.error(`${test.description}: failed - ${ex.toString()}`);
     } finally {
+        try {
+            const screenshotBuffer = await page.screenshot({ fullPage: false });
+            context.bindings.screenshot = screenshotBuffer;
+        } catch {}
         await browserContext.close();
     }
     

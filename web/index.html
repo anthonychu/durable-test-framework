@@ -6,23 +6,39 @@
   <title>Durable Functions test framework</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-</head>
+  <style>
+    .slide-fade-enter-active,
+    .slide-fade-leave-active {
+      transition: all .5s ease;
+    }
+
+    .slide-fade-enter,
+    .slide-fade-leave-to {
+      /* transform: translateX(60px); */
+      height: 0px;
+      overflow-y: hidden;
+      /* opacity: 0.25; */
+    }
+  </style>
+  </head>
 
 <body>
   <div id="app">
     <div class="container">
-      <div v-for="result in results" :key="result.runId" class="row">
-        <div class="col-12">
-          <hr />
+      <transition-group name="slide-fade" tag="div">
+        <div v-for="result in results" :key="result.runId" class="row">
+          <div class="col-12">
+            <hr />
+          </div>
+          <div class="col-md-8">
+            <h3>{{ result.passed ? "✅ Passed" : "❌ Failed" }}: {{ result.description }}</h3>
+            <p v-if="result.exception">{{ result.exception }}</p>
+          </div>
+          <div class="col-md-4">
+            <img v-if="result.screenshotAvailable" :src="result.screenshotUrl" class="screenshot img-fluid img-thumbnail" @error="onImageError" />
+          </div>
         </div>
-        <div class="col-md-8">
-          <h3>{{ result.passed ? "✅ Passed" : "❌ Failed" }}: {{ result.description }}</h3>
-          <p v-if="result.exception">{{ result.exception }}</p>
-        </div>
-        <div class="col-md-4">
-          <img v-if="result.screenshotAvailable" :src="result.screenshotUrl" class="screenshot img-fluid img-thumbnail" @error="onImageError" />
-        </div>
-      </div>
+      </transition-group>
     </div>
   </div>
 
