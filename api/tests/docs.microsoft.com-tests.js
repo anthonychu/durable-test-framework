@@ -121,10 +121,10 @@ describe('Microsoft Docs', () => {
     });
   
     it('should have the right title', async (page) => {
-      await page.goto("https://docs.microsoft.com/learn/");
+      await page.goto("https://docs.microsoft.com/azure/static-web-apps/");
       const title = await page.title();
   
-      assert.match(title, /^Microsoft Learn/i);
+      assert.match(title, /Static Web Apps/i);
     });
 
     it('should include a section on cloning the repo in the quickstart', async (page) => {

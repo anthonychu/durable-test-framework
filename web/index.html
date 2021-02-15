@@ -24,7 +24,9 @@
 
 <body>
   <div id="app">
-    <div class="container">
+    <div class="container" v-if="connected">
+      &nbsp;<br />
+      <h2>Durable Functions Test Framework</h2>
       <transition-group name="slide-fade" tag="div">
         <div v-for="result in results" :key="result.runId" class="row">
           <div class="col-12">
@@ -50,7 +52,8 @@
       el: '#app',
       data: function () {
         return {
-          results: []
+          results: [],
+          connected: false
         }
       },
       mounted: async function () {
@@ -61,7 +64,9 @@
 
         connection.on('testCompleted', onTestCompleted.bind(this))
 
-        connection.start();
+        connection.start().then(function() {
+          this.connected = true
+        }.bind(this))
 
         function onTestCompleted(testResult) {
           const results = this.results
@@ -69,7 +74,7 @@
           loadImage(5)
 
           function loadImage(retriesRemaining) {
-            const img = new Image();
+            const img = new Image()
             img.onerror = function () {
               if (retriesRemaining > 0) {
                 setTimeout(() => loadImage(retriesRemaining - 1), 1000)
