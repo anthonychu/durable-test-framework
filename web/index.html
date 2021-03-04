@@ -58,7 +58,7 @@
       },
       mounted: async function () {
         const connection = new signalR.HubConnectionBuilder()
-          .withUrl('http://localhost:7071/api')
+          .withUrl('https://20210303-durable-test-framework.azurewebsites.net/api')
           .withAutomaticReconnect()
           .build()
 

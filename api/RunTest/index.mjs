@@ -1,10 +1,10 @@
-﻿const tests = require('../durable-tests');
-const puppeteer = require('puppeteer');
+﻿import tests from '../durable-tests.mjs';
+import puppeteer from 'puppeteer';
 
 const storageBaseUrl = process.env.STORAGE_BASE_URL;
 const browserTask = puppeteer.launch();
 
-module.exports = async function (context) {
+export default async function (context) {
     const { testId, runId } = context.bindings.testData;
     const test = tests[testId];
     if (!test) {

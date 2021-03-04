@@ -1,7 +1,7 @@
-﻿const df = require("durable-functions");
-const { v4: uuidv4 } = require('uuid');
+﻿import { orchestrator } from "durable-functions";
+import { v4 as uuidv4 } from 'uuid';
 
-module.exports = df.orchestrator(function* (context) {
+export default orchestrator(function* (context) {
     const iterations = parseInt(context.df.getInput());
     const testIds = yield context.df.callActivity('DiscoverTests', iterations);
 

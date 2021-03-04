@@ -1,8 +1,6 @@
-﻿const durableTests = require("../durable-tests");
+﻿import tests from '../durable-tests.mjs';
 
-const tests = require('../durable-tests');
-
-module.exports = async function (context) {
+export default async function (context) {
     const testIds = [];
     for (let i = 0; i < context.bindings.iterations; i++) {
         testIds.push(...Object.keys(tests));

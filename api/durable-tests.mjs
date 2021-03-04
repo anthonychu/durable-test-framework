@@ -1,6 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-const chai = require('chai');
+import fs from 'fs';
+import path from 'path';
+import chai from 'chai';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const durableTests = {};
 let currentFile = '';
@@ -24,16 +28,17 @@ global.it = function (description, fn) {
   durableTests[testId] = test;
 }
 
-function discoverTests() {
+async function discoverTests() {
   const testsFolder = `${__dirname}/Tests`;
   const files = fs.readdirSync(testsFolder);
 
   for (let file of files) {
-    file = path.join(testsFolder, file).replace(/\.js$/, '');
+    file = path.join(testsFolder, file);
     currentFile = file;
-    require(currentFile);
+    await import(currentFile);
   }
 }
 
-discoverTests();
-module.exports = durableTests;
+await discoverTests();
+
+export default durableTests;
